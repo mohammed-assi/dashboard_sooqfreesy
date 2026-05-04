@@ -1,0 +1,28 @@
+{
+  "table": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role Name",
+    "phone": "Phone Number",
+    "dob": "Date of Birth",
+    "status": "Status",
+    "joined_on": "Joined On",
+    "activity": "Activity",
+    "sno": "S.No",
+    "image": "Image",
+    "title": "Title",
+    "main_category": "Main Category",
+    "date": "Date",
+    "view": "View",
+    "topic": "Topic Name",
+    "lesson": "Lesson",
+    "action": "Action",
+    "icon": "Icon Image",
+    "arabic_name": "Arabic Name",
+    "parent": "Parent Category",
+    "user": "User",
+    "category": "Category",
+    "sub_category": "Sub Category",
+    "type": "Type"
+  }
+}

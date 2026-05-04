@@ -1,0 +1,1 @@
+export const USERS_TABLE_PAGINATION_DATA = [5, 10, 25, 50, 100];
