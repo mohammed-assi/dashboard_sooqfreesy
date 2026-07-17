@@ -116,7 +116,7 @@ export const CONTENT_MANAGEMENT_HEAD = [
 export const CATEGORY_SUB_TABLE_HEAD = [
   { id: "icon", label: "Icon Image", alignment: "text-left" },
   { id: "name", label: "Name", alignment: "text-left" },
-  // { id: "arabic_name", label: "Arabic Name", alignment: "text-left" },
+  { id: "arabic_name", label: "Arabic Name", alignment: "text-left" },
   { id: "parent", label: "Parent Category", alignment: "text-left" },
   { id: "action", label: "Action", alignment: "text-right" },
 ];
@@ -148,13 +148,19 @@ export const PARENT_FEEDBACK_TABLE_HEAD = [
 ];
 
 export const POST_TABLE_HEAD = [
-  { id: "srNo", label: "S.No.", alignment: "text-left" },
+  { id: "srNo", label: "S.No.", alignment: "text-left", className: "w-14 !px-3" },
+  { id: "postId", label: "ID", alignment: "text-left", className: "w-16 !px-3" },
   { id: "username", label: "User", alignment: "text-left" },
   { id: "categoryName", label: "Category", alignment: "text-left" },
   { id: "sub_categoryName", label: "Sub Category", alignment: "text-left" },
   { id: "title", label: "Title", alignment: "text-left" },
   { id: "status", label: "Status", alignment: "text-left" },
   { id: "action", label: "Action", alignment: "text-right" },
+];
+
+export const POST_REASSIGN_TABLE_HEAD = [
+  { id: "select", label: "", alignment: "text-left" },
+  ...POST_TABLE_HEAD,
 ];
 
 export const REPORT_POST_TABLE_HEAD = [

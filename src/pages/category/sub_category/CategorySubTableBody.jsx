@@ -52,47 +52,34 @@ const CategorySubTableBody = ({
               >
                 {name ? `${name}` : `${name}`}
               </th>
-              {/* <th
+              <th
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
               >
                 {arabic_name ? `${arabic_name}` : `${arabic_name}`}
-              </th> */}
+              </th>
               <td className="px-6 py-4">{category}</td>
               <td className="px-6 py-4">
-                <div className="flex items-center justify-end">
-                  <div className="group relative">
-                    <i
-                      onClick={() => handleOpenEditModal(subCategoryDetail)}
-                      className="fa-solid fa-pen-to-square fa-lg pe-3"
-                      style={{
-                        color: "var(--primary-color)",
-                        cursor: "pointer",
-                      }}
-                    />
-                    <div className="bg-(--primary-color) p-2 rounded-md group-hover:flex hidden absolute -top-2 -translate-y-full left-1/2 -translate-x-1/2">
-                      <span className="text-white text-sm whitespace-nowrap">
-                        Edit
-                      </span>
-                      <div className="bg-inherit rotate-45 p-1 absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2"></div>
-                    </div>
-                  </div>
+  <div className="flex items-center justify-end gap-2">
 
-                  <div className="group relative">
-                    <i
-                      onClick={() => handleOpenDeleteModal(id)}
-                      className="fa-solid fa-trash fa-sm"
-                      style={{ color: "rgb(245, 60, 69)", cursor: "pointer" }}
-                    />
-                    <div className="bg-red-400 p-2 rounded-md group-hover:flex hidden absolute -top-2 -translate-y-full left-1/2 -translate-x-1/2">
-                      <span className="text-black text-sm whitespace-nowrap">
-                        Delete
-                      </span>
-                      <div className="bg-inherit rotate-45 p-1 absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2"></div>
-                    </div>
-                  </div>
-                </div>
-              </td>
+    {/* EDIT BUTTON */}
+    <button
+      onClick={() => handleOpenEditModal(subCategoryDetail)}
+      className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+    >
+      Edit
+    </button>
+
+    {/* DELETE BUTTON */}
+    <button
+      onClick={() => handleOpenDeleteModal(id)}
+      className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+    >
+      Delete
+    </button>
+
+  </div>
+</td>
             </tr>
           );
         })

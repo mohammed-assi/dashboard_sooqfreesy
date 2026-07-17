@@ -58,6 +58,7 @@ export const SUBCATEGORY = {
   CREATE: `${BASEURL}/admin/category/subcategory/create`,
   UPDATE: `${BASEURL}/admin/category/subcategory/update`,
   DELETE: `${BASEURL}/admin/category/subcategory/delete`,
+  REASSIGN_LISTINGS: `${BASEURL}/admin/category/subcategory/reassign-listings`,
 };
 
 export const FORMSTRUCTURE = {

@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { getRequest, deleteRequest } from "../../config/apiFunctions";
 import PostTableBody from "./PostTableBody";
 import { POSTS } from "../../config/endPoints";
-import { POST_TABLE_HEAD } from "../../app/constants/TableHeadings";
+import { POST_REASSIGN_TABLE_HEAD } from "../../app/constants/TableHeadings";
 import TableHead from "../../common/tableHead/TableHead";
+import ReassignSubCategoryModal from "./ReassignSubCategoryModal";
 import i18n from "../../i18n";
 import { toast } from "react-toastify";
 import PageMeta from "../../common/PageMeta";
@@ -28,6 +29,28 @@ const Post = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [error, setError] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showReassignModal, setShowReassignModal] = useState(false);
+
+  const pageIds = (postList?.posts ?? []).map((p) => p.id);
+  const allOnPageSelected =
+    pageIds.length > 0 && pageIds.every((id) => selectedIds.includes(id));
+
+  const handleToggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  const handleToggleSelectAll = () => {
+    setSelectedIds((prev) =>
+      allOnPageSelected
+        ? prev.filter((id) => !pageIds.includes(id))
+        : [...new Set([...prev, ...pageIds])]
+    );
+  };
+
+  const clearSelection = () => setSelectedIds([]);
 
   const handleOpenSuspendModal = (post, newStatus) => {
     setShowSuspendModal(true);
@@ -142,6 +165,7 @@ const Post = () => {
 
   useEffect(() => {
     postListCallBack();
+    clearSelection();
   }, [currentPage, rowsPerPage, searchTextDebounce]);
 
   useEffect(() => {
@@ -185,7 +209,7 @@ const Post = () => {
             onClick={() => setShowSuspendModal(false)}
             className="absolute top-3 right-3 text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white rounded-lg text-sm w-8 h-8 flex justify-center items-center"
           >
-            ✕
+            âœ•
           </button>
 
           {/* Modal Content */}
@@ -269,17 +293,60 @@ const Post = () => {
         handleChangeSearchText={handleChangeSearchText}
       />
 
+      <div className="flex items-center justify-between gap-3 py-2">
+        <label className="flex items-center gap-2 text-sm text-gray-600">
+          <input
+            type="checkbox"
+            className="w-4 h-4 cursor-pointer accent-(--green-color)"
+            checked={allOnPageSelected}
+            onChange={handleToggleSelectAll}
+            disabled={pageIds.length === 0}
+          />
+          Select all on this page
+          {selectedIds.length > 0 && (
+            <span className="ml-2 font-medium text-gray-800">
+              ({selectedIds.length} selected)
+            </span>
+          )}
+        </label>
+
+        <div className="flex items-center gap-2">
+          {selectedIds.length > 0 && (
+            <button
+              type="button"
+              onClick={clearSelection}
+              className="px-3 py-1.5 text-sm rounded-md border border-gray-300"
+            >
+              Clear
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setShowReassignModal(true)}
+            disabled={selectedIds.length === 0}
+            className="primary-button disabled:opacity-50"
+          >
+            <i className="fa-solid fa-arrow-right-arrow-left pe-2" />
+            Reassign subcategory
+          </button>
+        </div>
+      </div>
+
       <div>
         <div className="relative w-full overflow-x-auto hide-scrollba">
           <div className="min-w-[900px]">
             <table className="w-full text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <TableHead headLable={POST_TABLE_HEAD} />
+              <TableHead headLable={POST_REASSIGN_TABLE_HEAD} />
               <PostTableBody
                 postList={postList}
                 postListCallBack={postListCallBack}
                 handleOpenDeleteModal={handleOpenDeleteModal}
                 handleOpenSuspendModal={handleOpenSuspendModal}
                 loading={loading}
+                selectedIds={selectedIds}
+                onToggleSelect={handleToggleSelect}
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
               />
             </table>
           </div>
@@ -314,6 +381,17 @@ const Post = () => {
         setShowSuspendModal={setShowSuspendModal}
         pendingStatus={pendingStatus}
         handleConfirmStatusChange={handleConfirmStatusChange}
+      />
+
+      {/* Bulk reassign subcategory */}
+      <ReassignSubCategoryModal
+        isOpen={showReassignModal}
+        onClose={() => setShowReassignModal(false)}
+        listingIds={selectedIds}
+        onSuccess={() => {
+          clearSelection();
+          postListCallBack();
+        }}
       />
     </>
   );

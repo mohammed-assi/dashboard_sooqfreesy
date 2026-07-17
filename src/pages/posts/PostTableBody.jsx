@@ -1,4 +1,4 @@
-import { POST_TABLE_HEAD } from "../../app/constants/TableHeadings";
+import { POST_REASSIGN_TABLE_HEAD } from "../../app/constants/TableHeadings";
 import TableSkeleton from "../../ui/tableSkeleton/TableSkeleton";
 import Switch from "react-switch";
 import { Link } from "react-router";
@@ -15,12 +15,14 @@ const PostTableBody = ({
   handleSwitchChange, // from parent
   currentPage = 1,
   rowsPerPage = 10,
+  selectedIds = [],
+  onToggleSelect,
 }) => {
 
   if (!loading && (!postList?.posts || postList?.posts.length === 0)) {
     return (
       <DataNotFound
-        colSpan={POST_TABLE_HEAD.length}
+        colSpan={POST_REASSIGN_TABLE_HEAD.length}
         message="No data found"
       />
     );
@@ -36,7 +38,7 @@ const PostTableBody = ({
   return (
     <tbody>
       {loading ? (
-        <TableSkeleton colSpan={POST_TABLE_HEAD.length} rows={5} />
+        <TableSkeleton colSpan={POST_REASSIGN_TABLE_HEAD.length} rows={5} />
       ) : (
         (postList?.posts ?? []).map((post, i) => {
           const {
@@ -55,8 +57,19 @@ const PostTableBody = ({
               key={id || i}
               className="bg-white border-b text-sm border-gray-200"
             >
-              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+              <td className="px-3 py-4 w-10">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 cursor-pointer accent-(--green-color)"
+                  checked={selectedIds.includes(id)}
+                  onChange={() => onToggleSelect?.(id)}
+                />
+              </td>
+              <td className="px-3 py-4 w-14 font-medium text-gray-900 whitespace-nowrap">
                 {srNo}
+              </td>
+              <td className="px-3 py-4 w-16 font-medium text-gray-900 whitespace-nowrap">
+                {id}
               </td>
               <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                 {username || "N/A"}
