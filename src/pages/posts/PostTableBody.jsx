@@ -5,6 +5,12 @@ import { Link } from "react-router";
 import { ROUTES } from "../../app/constants";
 import { encodeId } from "../../common/utilis/encrypt";
 import DataNotFound from "../../ui/dataNotFound/DataNotFound";
+import { useTranslation } from "react-i18next";
+import {
+  POST_STATUS,
+  POST_STATUS_OPTIONS,
+  getPostStatusOption,
+} from "../../app/constants/PostStatus";
 
 const PostTableBody = ({
   postList,
@@ -18,6 +24,7 @@ const PostTableBody = ({
   selectedIds = [],
   onToggleSelect,
 }) => {
+  const { t } = useTranslation();
 
   if (!loading && (!postList?.posts || postList?.posts.length === 0)) {
     return (
@@ -80,9 +87,13 @@ const PostTableBody = ({
 
               <td className="px-6 py-4">
                 <div className="flex items-center justify-end">
-                  {status === 3 ? (
-                    <span className="px-2 py-1 text-sm rounded-md border border-gray-300 text-gray-600 bg-gray-100">
-                      Sold
+                  {status === POST_STATUS.SOLD ? (
+                    <span
+                      className={`px-2 py-1 text-sm rounded-md border ${
+                        getPostStatusOption(status)?.className ?? ""
+                      }`}
+                    >
+                      {t(getPostStatusOption(status)?.labelKey)}
                     </span>
                   ) : (
                     <select
@@ -90,17 +101,17 @@ const PostTableBody = ({
                       onChange={(e) =>
                         onStatusChange(post, Number(e.target.value))
                       }
-                      className={`
-          px-2 py-1 text-sm rounded-md border cursor-pointer
-          focus:outline-none focus:ring-1 transition-colors
-          ${status === 1 ? "border-green-400 text-green-600 bg-green-50" : ""}
-          ${status === 2 ? "border-red-400 text-red-600 bg-red-50" : ""}
-          ${status === 0 ? "border-gray-300 text-gray-600 bg-gray-50" : ""}
-        `}
+                      className={`px-2 py-1 text-sm rounded-md border cursor-pointer focus:outline-none focus:ring-1 transition-colors ${
+                        getPostStatusOption(status)?.className ?? ""
+                      }`}
                     >
-                      <option value={0}>Unapproved</option>
-                      <option value={1}>Approved</option>
-                      <option value={2}>Rejected</option>
+                      {POST_STATUS_OPTIONS.filter(
+                        (option) => option.value !== POST_STATUS.SOLD
+                      ).map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {t(option.labelKey)}
+                        </option>
+                      ))}
                     </select>
                   )}
                 </div>

@@ -14,8 +14,24 @@ import useSearchDebounce from "../../common/textDebounce/TextDebounce";
 import Pagination from "../../common/pagination/Pagination";
 import { USERS_TABLE_PAGINATION_DATA } from "../../app/constants/PaginationData";
 import ConfirmModal from "../../common/modal/ConfirmModal";
+import PostStatusFilter from "./PostStatusFilter";
+import { isFilterableStatus } from "../../app/constants/PostStatus";
+import { useSearchParams } from "react-router";
+
+// `null` = All (omit `status` from filters). Anything else must survive a
+// round-trip through the URL as a number — including 0, which is falsy.
+// Non-filterable values (e.g. Sold) fall back to All so the URL can't select
+// an option the dropdown doesn't offer.
+const parseStatusParam = (raw) => {
+  if (raw === null || raw === "" || raw === "all") return null;
+  const parsed = Number(raw);
+  return isFilterableStatus(parsed) ? parsed : null;
+};
 
 const Post = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  // No `status` param (or an unrecognised one) means All.
+  const statusFilter = parseStatusParam(searchParams.get("status"));
   const [postList, setPostList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(false);
@@ -154,19 +170,43 @@ const Post = () => {
   }
 
   const postListCallBack = () => {
+    const filters = { searchtext: searchTextDebounce };
+
+    // Explicit null check, NOT `if (statusFilter)` — status 0 (Pending) is
+    // falsy and would silently be dropped, showing every post instead.
+    if (statusFilter !== null) {
+      filters.status = statusFilter;
+    }
+
     getAllPosts(
       `${
         POSTS.LIST
       }?page=${currentPage}&limit=${rowsPerPage}&filters=${encodeURIComponent(
-        JSON.stringify({ searchtext: searchTextDebounce })
+        JSON.stringify(filters)
       )}`
+    );
+  };
+
+  const handleChangeStatusFilter = (nextStatus) => {
+    setCurrentPage(1);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (nextStatus === null) {
+          next.delete("status");
+        } else {
+          next.set("status", String(nextStatus));
+        }
+        return next;
+      },
+      { replace: true }
     );
   };
 
   useEffect(() => {
     postListCallBack();
     clearSelection();
-  }, [currentPage, rowsPerPage, searchTextDebounce]);
+  }, [currentPage, rowsPerPage, searchTextDebounce, statusFilter]);
 
   useEffect(() => {
     postListCallBack();
@@ -291,6 +331,11 @@ const Post = () => {
       <SearchBar
         searchValue={searchValue}
         handleChangeSearchText={handleChangeSearchText}
+      />
+
+      <PostStatusFilter
+        value={statusFilter}
+        onChange={handleChangeStatusFilter}
       />
 
       <div className="flex items-center justify-between gap-3 py-2">

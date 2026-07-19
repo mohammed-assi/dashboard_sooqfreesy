@@ -7,11 +7,27 @@ i18n.use(initReactI18next).init({
     en: {
       translation: {
         welcome: "Welcome",
+        postStatus: {
+          label: "Status",
+          all: "All",
+          pending: "Pending",
+          approved: "Approved",
+          rejected: "Rejected",
+          sold: "Sold",
+        },
       },
     },
     ar: {
       translation: {
         welcome: "مرحبا",
+        postStatus: {
+          label: "الحالة",
+          all: "الكل",
+          pending: "قيد المراجعة",
+          approved: "مقبول",
+          rejected: "مرفوض",
+          sold: "مباع",
+        },
       },
     },
   },
